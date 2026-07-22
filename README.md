@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QuantumGrid
 
-## Getting Started
+Plataforma de gestión inteligente de infraestructura energética impulsada por IA y simulaciones cuánticas.
 
-First, run the development server:
+## Descripción
+
+QuantumGrid es una solución diseñada para optimizar la toma de decisiones en redes eléctricas mediante simulaciones avanzadas e inteligencia artificial. La plataforma permite a operadores de infraestructura energética visualizar, analizar y predecir el comportamiento de sus redes en tiempo real.
+
+### Características principales
+
+- **Dashboard interactivo** - Visualización en tiempo real de métricas de generación y consumo energético
+- **Análisis predictivo** - Estadísticas históricas y proyecciones basadas en IA
+- **Gestión de infraestructura** - Monitoreo de plantas de generación y estado de la red
+- **Insights inteligentes** - Recomendaciones automatizadas para optimización
+- **Reportes** - Generación de informes detallados
+- **Carga de datos** - Importación de datasets para análisis
+
+## Tech Stack
+
+- **Framework:** Next.js 16 con App Router
+- **UI:** React 19, Tailwind CSS 4, Framer Motion
+- **Estado:** Zustand, TanStack Query
+- **Gráficos:** Recharts
+- **Validación:** Zod
+- **Tipado:** TypeScript
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts disponibles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando | Descripción |
+|---------|-------------|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción |
+| `npm run start` | Servidor de producción |
+| `npm run lint` | Ejecutar ESLint |
+| `npm run lint:fix` | Corregir errores de lint |
+| `npm run format` | Formatear código con Prettier |
+| `npm run typecheck` | Verificar tipos de TypeScript |
 
-## Learn More
+## Estructura del proyecto
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/                  # Rutas y páginas (App Router)
+│   ├── (dashboard)/      # Rutas protegidas del dashboard
+│   ├── (public)/         # Rutas públicas (landing, login)
+│   └── api/              # API Routes
+├── components/           # Componentes React
+│   ├── charts/           # Componentes de gráficos
+│   ├── landing/          # Componentes del landing page
+│   ├── layout/           # Layout components
+│   ├── shared/           # Componentes reutilizables
+│   └── ui/               # Componentes UI base
+├── hooks/                # Custom React hooks
+├── lib/                  # Utilidades y configuraciones
+├── providers/            # Context providers
+├── services/             # Servicios y API clients
+├── store/                # Estado global (Zustand)
+└── types/                # Definiciones de TypeScript
+```
