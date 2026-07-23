@@ -145,6 +145,8 @@ export type InsightCategory =
   | 'cost'
   | 'sustainability';
 
+export type InsightStatus = 'new' | 'viewed' | 'assigned' | 'implemented' | 'dismissed';
+
 export interface Insight {
   id: string;
   title: string;
@@ -155,7 +157,7 @@ export interface Insight {
   impactValue?: number;
   recommendation: string;
   createdAt: string;
-  status: 'new' | 'viewed' | 'assigned' | 'dismissed';
+  status: InsightStatus;
   assignedTo?: string;
 }
 
