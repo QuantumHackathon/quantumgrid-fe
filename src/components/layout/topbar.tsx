@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, User, LogOut, Menu, X } from 'lucide-react';
+import { Bell, User, LogOut, Menu, X, Settings, ChevronDown } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUIStore } from '@/store/ui-store';
@@ -18,21 +18,34 @@ const pathLabels: Record<string, string> = {
   '/settings': 'Configuración',
 };
 
+// Mock user data
+const mockUser = {
+  name: 'Carlos Méndez',
+  email: 'carlos.mendez@ice.go.cr',
+  role: 'Administrador',
+  avatar: null,
+};
+
 export function Topbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { setSidebarOpen } = useUIStore();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const activeAlerts = mockAlerts.filter(alert => !dismissedAlerts.includes(alert.id));
 
-  // Close notifications when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
         setShowNotifications(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -52,6 +65,11 @@ export function Topbar() {
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `Hace ${hours}h`;
     return `Hace ${Math.floor(hours / 24)}d`;
+  };
+
+  const handleLogout = () => {
+    setShowUserMenu(false);
+    router.push('/');
   };
 
   return (
@@ -94,7 +112,10 @@ export function Topbar() {
         {/* Notifications */}
         <div className="relative" ref={notificationRef}>
           <button
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => {
+              setShowNotifications(!showNotifications);
+              setShowUserMenu(false);
+            }}
             className={cn(
               "relative flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
               showNotifications
@@ -188,19 +209,76 @@ export function Topbar() {
         </div>
 
         {/* User Menu */}
-        <div className="flex items-center gap-1 border-l border-[var(--color-border)] pl-2 lg:gap-2 lg:pl-4">
-          <button className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-elevated)]">
+        <div className="relative border-l border-[var(--color-border)] pl-2 lg:pl-4" ref={userMenuRef}>
+          <button
+            onClick={() => {
+              setShowUserMenu(!showUserMenu);
+              setShowNotifications(false);
+            }}
+            className={cn(
+              "flex items-center gap-2 rounded-lg px-2 py-1 text-sm transition-colors",
+              showUserMenu
+                ? "bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]"
+                : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)]"
+            )}
+          >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
               <User className="h-4 w-4" />
             </div>
-            <span className="hidden font-medium lg:inline">Usuario</span>
+            <span className="hidden max-w-[120px] truncate font-medium lg:inline">
+              {mockUser.name}
+            </span>
+            <ChevronDown className={cn(
+              "hidden h-4 w-4 transition-transform lg:block",
+              showUserMenu && "rotate-180"
+            )} />
           </button>
-          <button
-            className="hidden h-9 w-9 items-center justify-center rounded-lg text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-error)] lg:flex"
-            aria-label="Cerrar sesión"
-          >
-            <LogOut className="h-5 w-5" />
-          </button>
+
+          {/* User Menu Dropdown */}
+          {showUserMenu && (
+            <div className="absolute right-0 top-full mt-2 w-64 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg">
+              {/* User Info */}
+              <div className="border-b border-[var(--color-border)] p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
+                    <User className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-[var(--color-text-primary)]">
+                      {mockUser.name}
+                    </p>
+                    <p className="truncate text-xs text-[var(--color-text-muted)]">
+                      {mockUser.email}
+                    </p>
+                    <span className="mt-1 inline-block rounded bg-[var(--color-primary)]/10 px-2 py-0.5 text-xs font-medium text-[var(--color-primary)]">
+                      {mockUser.role}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Menu Items */}
+              <div className="p-2">
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    router.push('/settings');
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"
+                >
+                  <Settings className="h-4 w-4" />
+                  Configuración
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-[var(--color-error)] transition-colors hover:bg-[var(--color-error)]/10"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
