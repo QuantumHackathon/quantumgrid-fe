@@ -88,15 +88,15 @@ export function SolutionPipeline() {
           {/* Connecting line */}
           <div className="hidden lg:block absolute top-[4.5rem] left-[10%] right-[10%] h-1 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-tertiary)] via-[var(--color-accent)] to-[var(--color-secondary)] opacity-30" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {pipelineSteps.map((step, index) => (
               <motion.div
                 key={step.title}
                 variants={staggerItem}
                 whileHover={{ y: -8 }}
-                className="relative group"
+                className={`relative group ${index === 4 ? 'col-span-2 sm:col-span-1 max-w-[200px] mx-auto sm:max-w-none' : ''}`}
               >
-                <div className="flex flex-col items-center p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] transition-all duration-300 group-hover:border-[var(--color-border-strong)] group-hover:shadow-[var(--glow-soft)]">
+                <div className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] transition-all duration-300 group-hover:border-[var(--color-border-strong)] group-hover:shadow-[var(--glow-soft)]">
                   {/* Label badge */}
                   <div
                     className={`absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
@@ -126,14 +126,6 @@ export function SolutionPipeline() {
                   </p>
                 </div>
 
-                {/* Arrow connector (mobile) */}
-                {index < pipelineSteps.length - 1 && (
-                  <div className="flex md:hidden justify-center my-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[var(--color-text-muted)] opacity-50 rotate-90">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
               </motion.div>
             ))}
           </div>

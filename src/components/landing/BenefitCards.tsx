@@ -88,15 +88,15 @@ export function BenefitCards() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           {benefits.map((benefit, index) => (
             <motion.div
               key={benefit.title}
               variants={staggerItem}
               whileHover="hover"
-              className={`relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition-all duration-300 hover:border-[var(--color-border-strong)] ${
-                index === 0 || index === 3 ? 'md:col-span-2 lg:col-span-1' : ''
+              className={`relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 md:p-6 transition-all duration-300 hover:border-[var(--color-border-strong)] ${
+                index === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
               }`}
               style={{
                 boxShadow: `inset 0 1px 0 0 rgba(255,255,255,0.05)`,

@@ -96,17 +96,17 @@ export function HybridIntelligence() {
         >
           {/* Classical Intelligence Column */}
           <motion.div variants={staggerItem} className="relative">
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 h-full">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 md:p-6 h-full">
               {/* Header */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4 md:mb-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)] bg-opacity-20">
                   <Cpu className="h-5 w-5 text-[var(--color-primary)]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[var(--color-text-primary)]">
+                  <h3 className="font-semibold text-[var(--color-text-primary)] text-sm md:text-base">
                     Classical Intelligence
                   </h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">
+                  <p className="text-xs md:text-sm text-[var(--color-text-muted)]">
                     Heavy analytical work
                   </p>
                 </div>
@@ -141,17 +141,17 @@ export function HybridIntelligence() {
 
           {/* Quantum-Inspired Optimization Column */}
           <motion.div variants={staggerItem} className="relative">
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 h-full">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 md:p-6 h-full">
               {/* Header */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4 md:mb-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-tertiary)] bg-opacity-20">
                   <Sparkles className="h-5 w-5 text-[var(--color-tertiary)]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[var(--color-text-primary)]">
+                  <h3 className="font-semibold text-[var(--color-text-primary)] text-sm md:text-base">
                     Quantum-Inspired Optimization
                   </h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">
+                  <p className="text-xs md:text-sm text-[var(--color-text-muted)]">
                     Efficient solution search
                   </p>
                 </div>

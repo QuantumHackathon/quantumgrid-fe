@@ -93,7 +93,7 @@ export function FutureVisionCards() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           {visions.map((vision, index) => (
             <motion.div
@@ -101,7 +101,7 @@ export function FutureVisionCards() {
               variants={staggerItem}
               whileHover={{ y: -8, scale: 1.02 }}
               className={`group relative overflow-hidden rounded-2xl p-[1px] ${
-                index === 0 ? 'md:col-span-2 lg:col-span-1' : ''
+                index === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
               }`}
             >
               {/* Gradient border */}

@@ -88,7 +88,7 @@ export function ProblemFlow() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-2"
+          className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 md:gap-4"
         >
           {/* Connection line */}
           <div className="hidden md:block absolute top-12 left-[8%] right-[8%] h-[2px] bg-gradient-to-r from-[var(--color-tertiary)] via-[var(--color-warning)] to-[var(--color-error)] opacity-30" />
@@ -97,7 +97,7 @@ export function ProblemFlow() {
             <motion.div
               key={step.label}
               variants={staggerItem}
-              className="relative flex flex-col items-center flex-1"
+              className={`relative flex flex-col items-center ${index === 4 ? 'col-span-2 sm:col-span-1' : ''}`}
             >
               {/* Icon container */}
               <motion.div
@@ -133,29 +133,6 @@ export function ProblemFlow() {
                 </div>
               </div>
 
-              {/* Arrow (except last item) */}
-              {index < problemSteps.length - 1 && (
-                <div className="hidden md:flex absolute -right-2 top-8 translate-x-full items-center z-20">
-                  <motion.svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={isInView ? { opacity: 0.6, x: 0 } : { opacity: 0 }}
-                    transition={{ delay: index * 0.1 + 0.5 }}
-                  >
-                    <path
-                      d="M5 12H19M19 12L12 5M19 12L12 19"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-[var(--color-text-muted)]"
-                    />
-                  </motion.svg>
-                </div>
-              )}
             </motion.div>
           ))}
         </motion.div>
