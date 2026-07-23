@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   FileText,
   Download,
@@ -17,6 +17,10 @@ import {
   PieChart,
   TrendingUp,
   Zap,
+  X,
+  FileDown,
+  Printer,
+  Share2,
 } from 'lucide-react';
 import {
   Button,
@@ -28,9 +32,10 @@ import {
   CardContent,
   Modal,
   ModalFooter,
+  Alert,
 } from '@/components/ui';
-import { DataTable, EmptyState } from '@/components/shared';
-import type { Column } from '@/components/shared';
+import { EmptyState } from '@/components/shared';
+import { cn } from '@/lib/utils';
 
 interface Report {
   id: string;
@@ -57,7 +62,7 @@ const reportTypeIcons = {
   infrastructure: PieChart,
 };
 
-const mockReports: Report[] = [
+const initialReports: Report[] = [
   {
     id: '1',
     name: 'Reporte Mensual de Consumo - Enero 2024',
@@ -135,6 +140,19 @@ const reportTemplates = [
   },
 ];
 
+const periodOptions = [
+  { value: 'last-week', label: 'Última semana' },
+  { value: 'last-month', label: 'Último mes' },
+  { value: 'last-quarter', label: 'Último trimestre' },
+  { value: 'last-year', label: 'Último año' },
+];
+
+const formatOptions = [
+  { value: 'pdf', label: 'PDF' },
+  { value: 'excel', label: 'Excel' },
+  { value: 'csv', label: 'CSV' },
+];
+
 const typeOptions = [
   { value: 'all', label: 'Todos los tipos' },
   { value: 'consumption', label: 'Consumo' },
@@ -150,154 +168,162 @@ const statusOptions = [
   { value: 'error', label: 'Error' },
 ];
 
+const periodLabels: Record<string, string> = {
+  'last-week': 'Última semana',
+  'last-month': 'Último mes',
+  'last-quarter': 'Último trimestre',
+  'last-year': 'Último año',
+};
+
 export default function ReportsPage() {
+  const [reports, setReports] = useState<Report[]>(initialReports);
   const [selectedType, setSelectedType] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showNewReportModal, setShowNewReportModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('last-month');
+  const [selectedFormat, setSelectedFormat] = useState('pdf');
+  const [reportToPreview, setReportToPreview] = useState<Report | null>(null);
+  const [reportToDelete, setReportToDelete] = useState<Report | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
 
-  const filteredReports = mockReports.filter((report) => {
-    if (selectedType !== 'all' && report.type !== selectedType) return false;
-    if (selectedStatus !== 'all' && report.status !== selectedStatus) return false;
-    return true;
-  });
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      if (selectedType !== 'all' && report.type !== selectedType) return false;
+      if (selectedStatus !== 'all' && report.status !== selectedStatus) return false;
+      return true;
+    });
+  }, [reports, selectedType, selectedStatus]);
 
-  const stats = {
-    total: mockReports.length,
-    ready: mockReports.filter((r) => r.status === 'ready').length,
-    generating: mockReports.filter((r) => r.status === 'generating').length,
-    thisMonth: mockReports.filter((r) => {
+  const stats = useMemo(() => ({
+    total: reports.length,
+    ready: reports.filter((r) => r.status === 'ready').length,
+    generating: reports.filter((r) => r.status === 'generating').length,
+    thisMonth: reports.filter((r) => {
       const date = new Date(r.createdAt);
       const now = new Date();
       return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
     }).length,
+  }), [reports]);
+
+  const showFeedback = (type: 'success' | 'error' | 'info', message: string) => {
+    setFeedback({ type, message });
+    setTimeout(() => setFeedback(null), 3000);
   };
 
-  const columns: Column<Report>[] = [
-    {
-      key: 'name',
-      header: 'Reporte',
-      render: (_, row) => {
-        const Icon = reportTypeIcons[row.type];
-        return (
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--color-primary-light)]">
-              <Icon className="h-5 w-5 text-[var(--color-primary)]" />
-            </div>
-            <div>
-              <p className="font-medium text-[var(--color-text-primary)]">{row.name}</p>
-              <p className="text-xs text-[var(--color-text-muted)]">
-                {reportTypeLabels[row.type]} • {row.period}
-              </p>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      key: 'createdAt',
-      header: 'Fecha',
-      render: (value) => (
-        <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-          <Calendar className="h-4 w-4" />
-          {new Date(value as string).toLocaleDateString('es-CR', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })}
-        </div>
-      ),
-    },
-    {
-      key: 'format',
-      header: 'Formato',
-      render: (value) => (
-        <Badge variant="default" size="sm">
-          {(value as string).toUpperCase()}
-        </Badge>
-      ),
-    },
-    {
-      key: 'size',
-      header: 'Tamaño',
-      align: 'right',
-      render: (value) => (
-        <span className="text-sm text-[var(--color-text-muted)]">
-          {(value as string) || '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Estado',
-      render: (_, row) => {
-        if (row.status === 'ready') {
-          return (
-            <Badge variant="success">
-              <CheckCircle className="mr-1 h-3 w-3" />
-              Listo
-            </Badge>
-          );
-        }
-        if (row.status === 'generating') {
-          return (
-            <Badge variant="info">
-              <RefreshCw className="mr-1 h-3 w-3 animate-spin" />
-              Generando
-            </Badge>
-          );
-        }
-        return (
-          <Badge variant="error">
-            <AlertCircle className="mr-1 h-3 w-3" />
-            Error
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'actions',
-      header: '',
-      align: 'right',
-      render: (_, row) => (
-        <div className="flex items-center justify-end gap-2">
-          {row.status === 'ready' && (
-            <>
-              <Button variant="ghost" size="sm">
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Download className="h-4 w-4" />
-              </Button>
-            </>
-          )}
-          {row.status === 'error' && (
-            <Button variant="ghost" size="sm">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          )}
-          <Button variant="ghost" size="sm" className="text-[var(--color-error)]">
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  const handleGenerateReport = () => {
+    if (!selectedTemplate) return;
+
+    const template = reportTemplates.find(t => t.id === selectedTemplate);
+    if (!template) return;
+
+    setIsGenerating(true);
+
+    const newReport: Report = {
+      id: Date.now().toString(),
+      name: `${template.name} - ${periodLabels[selectedPeriod]}`,
+      type: template.type,
+      period: periodLabels[selectedPeriod],
+      createdAt: new Date().toISOString(),
+      status: 'generating',
+      format: selectedFormat as 'pdf' | 'excel' | 'csv',
+    };
+
+    setReports(prev => [newReport, ...prev]);
+    setShowNewReportModal(false);
+    setSelectedTemplate(null);
+    setIsGenerating(false);
+    showFeedback('info', 'Generando reporte...');
+
+    // Simulate report generation
+    setTimeout(() => {
+      setReports(prev => prev.map(r =>
+        r.id === newReport.id
+          ? { ...r, status: 'ready' as const, size: `${(Math.random() * 5 + 1).toFixed(1)} MB` }
+          : r
+      ));
+      showFeedback('success', 'Reporte generado exitosamente');
+    }, 3000);
+  };
+
+  const handleDownload = (report: Report) => {
+    showFeedback('success', `Descargando ${report.name}...`);
+    // Simulate download
+    setTimeout(() => {
+      const content = `Reporte: ${report.name}\nTipo: ${reportTypeLabels[report.type]}\nPeríodo: ${report.period}\nGenerado: ${new Date(report.createdAt).toLocaleString('es-CR')}`;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${report.name}.${report.format}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 500);
+  };
+
+  const handleRetry = (reportId: string) => {
+    setReports(prev => prev.map(r =>
+      r.id === reportId ? { ...r, status: 'generating' as const } : r
+    ));
+    showFeedback('info', 'Reintentando generar reporte...');
+
+    setTimeout(() => {
+      setReports(prev => prev.map(r =>
+        r.id === reportId
+          ? { ...r, status: 'ready' as const, size: `${(Math.random() * 5 + 1).toFixed(1)} MB` }
+          : r
+      ));
+      showFeedback('success', 'Reporte generado exitosamente');
+    }, 2000);
+  };
+
+  const handleDelete = () => {
+    if (!reportToDelete) return;
+    setReports(prev => prev.filter(r => r.id !== reportToDelete.id));
+    showFeedback('info', 'Reporte eliminado');
+    setShowDeleteModal(false);
+    setReportToDelete(null);
+  };
+
+  const clearFilters = () => {
+    setSelectedType('all');
+    setSelectedStatus('all');
+  };
+
+  const hasActiveFilters = selectedType !== 'all' || selectedStatus !== 'all';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
+      {/* Feedback Alert */}
+      {feedback && (
+        <div className="fixed right-4 top-20 z-50 animate-in slide-in-from-right">
+          <Alert
+            variant={feedback.type}
+            title={feedback.message}
+            dismissible
+            onDismiss={() => setFeedback(null)}
+          />
+        </div>
+      )}
+
       {/* Page Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <h1 className="text-xl font-bold text-[var(--color-text-primary)] lg:text-2xl">
             Reportes
           </h1>
-          <p className="text-sm text-[var(--color-text-muted)]">
+          <p className="text-xs text-[var(--color-text-muted)] lg:text-sm">
             Genere y descargue reportes del sistema energético
           </p>
         </div>
         <Button
           variant="primary"
+          size="sm"
           leftIcon={<Plus className="h-4 w-4" />}
           onClick={() => setShowNewReportModal(true)}
         >
@@ -306,16 +332,16 @@ export default function ReportsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5 text-[var(--color-primary)]" />
+          <CardContent className="p-3 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="rounded-lg bg-[var(--color-primary)]/10 p-2">
+                <FileText className="h-4 w-4 text-[var(--color-primary)] lg:h-5 lg:w-5" />
+              </div>
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">
-                  Total Reportes
-                </p>
-                <p className="text-2xl font-semibold text-[var(--color-text-primary)]">
+                <p className="text-xs text-[var(--color-text-muted)]">Total</p>
+                <p className="text-lg font-semibold text-[var(--color-text-primary)] lg:text-2xl">
                   {stats.total}
                 </p>
               </div>
@@ -323,12 +349,14 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
+          <CardContent className="p-3 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="rounded-lg bg-[var(--color-success)]/10 p-2">
+                <CheckCircle className="h-4 w-4 text-[var(--color-success)] lg:h-5 lg:w-5" />
+              </div>
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">Listos</p>
-                <p className="text-2xl font-semibold text-[var(--color-success)]">
+                <p className="text-xs text-[var(--color-text-muted)]">Listos</p>
+                <p className="text-lg font-semibold text-[var(--color-success)] lg:text-2xl">
                   {stats.ready}
                 </p>
               </div>
@@ -336,12 +364,14 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-[var(--color-info)]" />
+          <CardContent className="p-3 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="rounded-lg bg-[var(--color-info)]/10 p-2">
+                <Clock className="h-4 w-4 text-[var(--color-info)] lg:h-5 lg:w-5" />
+              </div>
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">Generando</p>
-                <p className="text-2xl font-semibold text-[var(--color-info)]">
+                <p className="text-xs text-[var(--color-text-muted)]">Generando</p>
+                <p className="text-lg font-semibold text-[var(--color-info)] lg:text-2xl">
                   {stats.generating}
                 </p>
               </div>
@@ -349,12 +379,14 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <Calendar className="h-5 w-5 text-[var(--color-accent)]" />
+          <CardContent className="p-3 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="rounded-lg bg-[var(--color-accent)]/10 p-2">
+                <Calendar className="h-4 w-4 text-[var(--color-accent)] lg:h-5 lg:w-5" />
+              </div>
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">Este Mes</p>
-                <p className="text-2xl font-semibold text-[var(--color-text-primary)]">
+                <p className="text-xs text-[var(--color-text-muted)]">Este Mes</p>
+                <p className="text-lg font-semibold text-[var(--color-text-primary)] lg:text-2xl">
                   {stats.thisMonth}
                 </p>
               </div>
@@ -365,43 +397,157 @@ export default function ReportsPage() {
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-4">
+        <CardContent className="p-3 lg:p-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-[var(--color-text-muted)]" />
               <span className="text-sm font-medium text-[var(--color-text-secondary)]">
                 Filtros:
               </span>
             </div>
-            <Select
-              options={typeOptions}
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="w-44"
-            />
-            <Select
-              options={statusOptions}
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-40"
-            />
+            <div className="flex flex-1 flex-wrap gap-2 lg:gap-3">
+              <Select
+                options={typeOptions}
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="flex-1 min-w-[130px] lg:flex-none lg:w-44"
+              />
+              <Select
+                options={statusOptions}
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="flex-1 min-w-[130px] lg:flex-none lg:w-40"
+              />
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  leftIcon={<X className="h-4 w-4" />}
+                >
+                  Limpiar
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Reports Table */}
+      {/* Reports List */}
       <Card>
         <CardHeader>
-          <CardTitle>Historial de Reportes</CardTitle>
+          <CardTitle className="text-base lg:text-lg">Historial de Reportes</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {filteredReports.length > 0 ? (
-            <DataTable
-              columns={columns}
-              data={filteredReports}
-              keyExtractor={(row) => row.id}
-              className="border-0"
-            />
+            <div className="divide-y divide-[var(--color-border)]">
+              {filteredReports.map((report) => {
+                const Icon = reportTypeIcons[report.type];
+                return (
+                  <div
+                    key={report.id}
+                    className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/10">
+                        <Icon className="h-5 w-5 text-[var(--color-primary)]" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium text-[var(--color-text-primary)] line-clamp-1">
+                          {report.name}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--color-text-muted)]">
+                          <span>{reportTypeLabels[report.type]}</span>
+                          <span>•</span>
+                          <span>{report.period}</span>
+                          <span>•</span>
+                          <span>
+                            {new Date(report.createdAt).toLocaleDateString('es-CR', {
+                              day: 'numeric',
+                              month: 'short',
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3 sm:justify-end">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="default" size="sm">
+                          {report.format.toUpperCase()}
+                        </Badge>
+                        {report.status === 'ready' && (
+                          <Badge variant="success" size="sm">
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            {report.size}
+                          </Badge>
+                        )}
+                        {report.status === 'generating' && (
+                          <Badge variant="info" size="sm">
+                            <RefreshCw className="mr-1 h-3 w-3 animate-spin" />
+                            Generando
+                          </Badge>
+                        )}
+                        {report.status === 'error' && (
+                          <Badge variant="error" size="sm">
+                            <AlertCircle className="mr-1 h-3 w-3" />
+                            Error
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        {report.status === 'ready' && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setReportToPreview(report);
+                                setShowPreviewModal(true);
+                              }}
+                              title="Vista previa"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDownload(report)}
+                              title="Descargar"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        {report.status === 'error' && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRetry(report.id)}
+                            title="Reintentar"
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-[var(--color-error)]"
+                          onClick={() => {
+                            setReportToDelete(report);
+                            setShowDeleteModal(true);
+                          }}
+                          title="Eliminar"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           ) : (
             <div className="p-8">
               <EmptyState
@@ -410,10 +556,7 @@ export default function ReportsPage() {
                 description="No se encontraron reportes con los filtros seleccionados"
                 action={{
                   label: 'Limpiar filtros',
-                  onClick: () => {
-                    setSelectedType('all');
-                    setSelectedStatus('all');
-                  },
+                  onClick: clearFilters,
                 }}
               />
             </div>
@@ -443,19 +586,21 @@ export default function ReportsPage() {
                 <button
                   key={template.id}
                   onClick={() => setSelectedTemplate(template.id)}
-                  className={`rounded-lg border p-4 text-left transition-all ${
+                  className={cn(
+                    'rounded-lg border p-4 text-left transition-all',
                     isSelected
-                      ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]'
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
                       : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
-                  }`}
+                  )}
                 >
                   <div className="flex items-start gap-3">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                      className={cn(
+                        'flex h-10 w-10 items-center justify-center rounded-lg',
                         isSelected
                           ? 'bg-[var(--color-primary)] text-white'
-                          : 'bg-[var(--color-neutral-100)]'
-                      }`}
+                          : 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]'
+                      )}
                     >
                       <Icon className="h-5 w-5" />
                     </div>
@@ -484,14 +629,9 @@ export default function ReportsPage() {
                     Período
                   </label>
                   <Select
-                    options={[
-                      { value: 'last-week', label: 'Última semana' },
-                      { value: 'last-month', label: 'Último mes' },
-                      { value: 'last-quarter', label: 'Último trimestre' },
-                      { value: 'last-year', label: 'Último año' },
-                      { value: 'custom', label: 'Personalizado' },
-                    ]}
-                    defaultValue="last-month"
+                    options={periodOptions}
+                    value={selectedPeriod}
+                    onChange={(e) => setSelectedPeriod(e.target.value)}
                   />
                 </div>
                 <div>
@@ -499,19 +639,16 @@ export default function ReportsPage() {
                     Formato
                   </label>
                   <Select
-                    options={[
-                      { value: 'pdf', label: 'PDF' },
-                      { value: 'excel', label: 'Excel' },
-                      { value: 'csv', label: 'CSV' },
-                    ]}
-                    defaultValue="pdf"
+                    options={formatOptions}
+                    value={selectedFormat}
+                    onChange={(e) => setSelectedFormat(e.target.value)}
                   />
                 </div>
               </div>
             </div>
           )}
         </div>
-        <ModalFooter>
+        <ModalFooter className="-mx-4 -mb-4 mt-4">
           <Button
             variant="ghost"
             onClick={() => {
@@ -521,8 +658,145 @@ export default function ReportsPage() {
           >
             Cancelar
           </Button>
-          <Button variant="primary" disabled={!selectedTemplate}>
+          <Button
+            variant="primary"
+            disabled={!selectedTemplate}
+            onClick={handleGenerateReport}
+            isLoading={isGenerating}
+          >
             Generar Reporte
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Preview Modal */}
+      <Modal
+        isOpen={showPreviewModal}
+        onClose={() => {
+          setShowPreviewModal(false);
+          setReportToPreview(null);
+        }}
+        title={reportToPreview?.name || 'Vista Previa'}
+        size="lg"
+      >
+        {reportToPreview && (
+          <>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="info">{reportTypeLabels[reportToPreview.type]}</Badge>
+                <Badge variant="default">{reportToPreview.format.toUpperCase()}</Badge>
+                <Badge variant="success">{reportToPreview.size}</Badge>
+              </div>
+
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-6">
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <FileText className="mb-4 h-16 w-16 text-[var(--color-text-muted)]" />
+                  <h3 className="text-lg font-medium text-[var(--color-text-primary)]">
+                    {reportToPreview.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+                    Período: {reportToPreview.period}
+                  </p>
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    Generado: {new Date(reportToPreview.createdAt).toLocaleString('es-CR')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4 text-center">
+                  <p className="text-2xl font-semibold text-[var(--color-primary)]">24</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">Páginas</p>
+                </div>
+                <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4 text-center">
+                  <p className="text-2xl font-semibold text-[var(--color-success)]">12</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">Gráficos</p>
+                </div>
+                <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4 text-center">
+                  <p className="text-2xl font-semibold text-[var(--color-info)]">8</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">Tablas</p>
+                </div>
+              </div>
+            </div>
+
+            <ModalFooter className="-mx-4 -mb-4 mt-4">
+              <Button
+                variant="ghost"
+                leftIcon={<Share2 className="h-4 w-4" />}
+                onClick={() => {
+                  showFeedback('success', 'Enlace copiado al portapapeles');
+                }}
+              >
+                Compartir
+              </Button>
+              <Button
+                variant="outline"
+                leftIcon={<Printer className="h-4 w-4" />}
+                onClick={() => {
+                  showFeedback('info', 'Enviando a impresora...');
+                }}
+              >
+                Imprimir
+              </Button>
+              <Button
+                variant="primary"
+                leftIcon={<FileDown className="h-4 w-4" />}
+                onClick={() => {
+                  handleDownload(reportToPreview);
+                  setShowPreviewModal(false);
+                }}
+              >
+                Descargar
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setReportToDelete(null);
+        }}
+        title="Eliminar Reporte"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--color-text-secondary)]">
+            ¿Está seguro que desea eliminar este reporte?
+          </p>
+          {reportToDelete && (
+            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-3">
+              <p className="font-medium text-[var(--color-text-primary)]">
+                {reportToDelete.name}
+              </p>
+              <p className="text-sm text-[var(--color-text-muted)]">
+                {reportTypeLabels[reportToDelete.type]} • {reportToDelete.period}
+              </p>
+            </div>
+          )}
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Esta acción no se puede deshacer.
+          </p>
+        </div>
+        <ModalFooter className="-mx-4 -mb-4 mt-4">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setShowDeleteModal(false);
+              setReportToDelete(null);
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            className="bg-[var(--color-error)] hover:bg-[var(--color-error)]/90"
+            onClick={handleDelete}
+          >
+            Eliminar
           </Button>
         </ModalFooter>
       </Modal>
