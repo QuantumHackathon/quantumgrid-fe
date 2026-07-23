@@ -18,6 +18,11 @@ import {
   Monitor,
   Moon,
   Sun,
+  Smartphone,
+  Laptop,
+  X,
+  Check,
+  AlertCircle,
 } from 'lucide-react';
 import {
   Button,
@@ -29,7 +34,9 @@ import {
   CardDescription,
   CardContent,
   Badge,
+  Alert,
 } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 type TabId = 'profile' | 'notifications' | 'security' | 'appearance';
 
@@ -52,18 +59,46 @@ const languageOptions = [
   { value: 'en', label: 'English' },
 ];
 
+type Session = {
+  id: string;
+  device: string;
+  deviceType: 'desktop' | 'mobile' | 'tablet';
+  location: string;
+  lastActive: string;
+  current: boolean;
+};
+
+const initialSessions: Session[] = [
+  { id: '1', device: 'MacBook Pro', deviceType: 'desktop', location: 'San José, Costa Rica', lastActive: 'Ahora mismo', current: true },
+  { id: '2', device: 'iPhone 14', deviceType: 'mobile', location: 'San José, Costa Rica', lastActive: 'Hace 2 horas', current: false },
+  { id: '3', device: 'Windows PC', deviceType: 'desktop', location: 'Heredia, Costa Rica', lastActive: 'Hace 3 días', current: false },
+];
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabId>('profile');
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>(initialSessions);
+
+  // Password states
+  const [passwordForm, setPasswordForm] = useState({
+    current: '',
+    new: '',
+    confirm: '',
+  });
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   // Form states
   const [profile, setProfile] = useState({
-    name: 'Carlos Rodríguez',
-    email: 'carlos.rodriguez@ice.go.cr',
+    name: 'Carlos Méndez',
+    email: 'carlos.mendez@ice.go.cr',
     phone: '+506 2220-1234',
     department: 'Operaciones',
-    role: 'Analista Senior',
+    role: 'Administrador',
   });
 
   const [notifications, setNotifications] = useState({
@@ -76,44 +111,103 @@ export default function SettingsPage() {
   });
 
   const [appearance, setAppearance] = useState({
-    theme: 'system',
+    theme: 'dark',
     language: 'es',
     timezone: 'America/Costa_Rica',
     compactMode: false,
   });
 
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
+
   const handleSave = () => {
     setIsSaving(true);
-    setTimeout(() => setIsSaving(false), 1500);
+    setSaveSuccess(false);
+    setTimeout(() => {
+      setIsSaving(false);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    }, 1000);
+  };
+
+  const handlePasswordChange = () => {
+    setPasswordError('');
+    setPasswordSuccess(false);
+
+    if (!passwordForm.current) {
+      setPasswordError('Ingrese su contraseña actual');
+      return;
+    }
+    if (passwordForm.new.length < 8) {
+      setPasswordError('La nueva contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+    if (passwordForm.new !== passwordForm.confirm) {
+      setPasswordError('Las contraseñas no coinciden');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    setTimeout(() => {
+      setIsChangingPassword(false);
+      setPasswordSuccess(true);
+      setPasswordForm({ current: '', new: '', confirm: '' });
+      setTimeout(() => setPasswordSuccess(false), 3000);
+    }, 1500);
+  };
+
+  const handleCloseSession = (sessionId: string) => {
+    setSessions(sessions.filter(s => s.id !== sessionId));
+  };
+
+  const handleCloseAllSessions = () => {
+    setSessions(sessions.filter(s => s.current));
+  };
+
+  const getDeviceIcon = (type: string) => {
+    switch (type) {
+      case 'mobile': return Smartphone;
+      case 'tablet': return Monitor;
+      default: return Laptop;
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <h1 className="text-xl font-bold text-[var(--color-text-primary)] lg:text-2xl">
             Configuración
           </h1>
-          <p className="text-sm text-[var(--color-text-muted)]">
+          <p className="text-xs text-[var(--color-text-muted)] lg:text-sm">
             Administre su perfil y preferencias del sistema
           </p>
         </div>
-        <Button
-          variant="primary"
-          leftIcon={<Save className="h-4 w-4" />}
-          onClick={handleSave}
-          isLoading={isSaving}
-        >
-          Guardar Cambios
-        </Button>
+        <div className="flex items-center gap-2">
+          {saveSuccess && (
+            <span className="flex items-center gap-1 text-sm text-[var(--color-success)]">
+              <Check className="h-4 w-4" />
+              Guardado
+            </span>
+          )}
+          <Button
+            variant="primary"
+            size="sm"
+            leftIcon={<Save className="h-4 w-4" />}
+            onClick={handleSave}
+            isLoading={isSaving}
+          >
+            <span className="hidden sm:inline">Guardar Cambios</span>
+            <span className="sm:hidden">Guardar</span>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-4">
+      <div className="grid gap-4 lg:grid-cols-4 lg:gap-6">
         {/* Sidebar Navigation */}
         <Card className="lg:col-span-1">
           <CardContent className="p-2">
-            <nav className="space-y-1">
+            <nav className="flex gap-1 overflow-x-auto lg:flex-col lg:space-y-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -121,14 +215,15 @@ export default function SettingsPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+                    className={cn(
+                      'flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors lg:w-full lg:gap-3 lg:py-2.5',
                       isActive
                         ? 'bg-[var(--color-primary)] text-white'
-                        : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-neutral-100)]'
-                    }`}
+                        : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]'
+                    )}
                   >
                     <Icon className="h-4 w-4" />
-                    {tab.label}
+                    <span className="hidden lg:inline">{tab.label}</span>
                   </button>
                 );
               })}
@@ -140,7 +235,7 @@ export default function SettingsPage() {
         <div className="lg:col-span-3">
           {/* Profile Tab */}
           {activeTab === 'profile' && (
-            <div className="space-y-6">
+            <div className="space-y-4 lg:space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Información Personal</CardTitle>
@@ -149,11 +244,13 @@ export default function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center gap-4 sm:flex-row">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-primary)]">
-                      <span className="text-2xl font-bold text-white">CR</span>
+                      <span className="text-2xl font-bold text-white">
+                        {profile.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                      </span>
                     </div>
-                    <div>
+                    <div className="text-center sm:text-left">
                       <Button variant="outline" size="sm">
                         Cambiar foto
                       </Button>
@@ -209,16 +306,16 @@ export default function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between rounded-lg bg-[var(--color-neutral-50)] p-4">
+                  <div className="flex items-center justify-between rounded-lg bg-[var(--color-surface-elevated)] p-4">
                     <div>
                       <p className="font-medium text-[var(--color-text-primary)]">
                         {profile.role}
                       </p>
                       <p className="text-sm text-[var(--color-text-muted)]">
-                        Acceso a: Dashboard, Análisis, Reportes, Infraestructura
+                        Acceso completo al sistema
                       </p>
                     </div>
-                    <Badge variant="info">Activo</Badge>
+                    <Badge variant="success">Activo</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -312,7 +409,7 @@ export default function SettingsPage() {
 
           {/* Security Tab */}
           {activeTab === 'security' && (
-            <div className="space-y-6">
+            <div className="space-y-4 lg:space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Cambiar Contraseña</CardTitle>
@@ -321,10 +418,22 @@ export default function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {passwordError && (
+                    <Alert variant="error" title="Error">
+                      {passwordError}
+                    </Alert>
+                  )}
+                  {passwordSuccess && (
+                    <Alert variant="success" title="Contraseña actualizada">
+                      Su contraseña ha sido cambiada exitosamente
+                    </Alert>
+                  )}
                   <Input
                     label="Contraseña actual"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
+                    value={passwordForm.current}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })}
                     leftIcon={<Key className="h-4 w-4" />}
                     rightIcon={
                       <button
@@ -342,18 +451,41 @@ export default function SettingsPage() {
                   />
                   <Input
                     label="Nueva contraseña"
-                    type="password"
+                    type={showNewPassword ? 'text' : 'password'}
                     placeholder="••••••••"
+                    value={passwordForm.new}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })}
                     leftIcon={<Key className="h-4 w-4" />}
-                    helperText="Mínimo 8 caracteres, incluya mayúsculas, números y símbolos"
+                    helperText="Mínimo 8 caracteres"
+                    rightIcon={
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                      >
+                        {showNewPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    }
                   />
                   <Input
                     label="Confirmar nueva contraseña"
                     type="password"
                     placeholder="••••••••"
+                    value={passwordForm.confirm}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })}
                     leftIcon={<Key className="h-4 w-4" />}
                   />
-                  <Button variant="primary">Actualizar Contraseña</Button>
+                  <Button
+                    variant="primary"
+                    onClick={handlePasswordChange}
+                    isLoading={isChangingPassword}
+                  >
+                    Actualizar Contraseña
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -365,49 +497,104 @@ export default function SettingsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between rounded-lg bg-[var(--color-success-light)] p-4">
+                  <div className={cn(
+                    "flex items-center justify-between rounded-lg p-4",
+                    twoFactorEnabled
+                      ? "bg-[var(--color-success)]/10"
+                      : "bg-[var(--color-surface-elevated)]"
+                  )}>
                     <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
+                      {twoFactorEnabled ? (
+                        <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
+                      ) : (
+                        <AlertCircle className="h-5 w-5 text-[var(--color-warning)]" />
+                      )}
                       <div>
                         <p className="font-medium text-[var(--color-text-primary)]">
-                          2FA Habilitado
+                          {twoFactorEnabled ? '2FA Habilitado' : '2FA Deshabilitado'}
                         </p>
                         <p className="text-sm text-[var(--color-text-muted)]">
-                          Usando aplicación autenticadora
+                          {twoFactorEnabled
+                            ? 'Usando aplicación autenticadora'
+                            : 'Su cuenta es menos segura'}
                         </p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      Configurar
+                    <Button
+                      variant={twoFactorEnabled ? "outline" : "primary"}
+                      size="sm"
+                      onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
+                    >
+                      {twoFactorEnabled ? 'Deshabilitar' : 'Habilitar'}
                     </Button>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle>Sesiones Activas</CardTitle>
-                  <CardDescription>
-                    Administre los dispositivos conectados a su cuenta
-                  </CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Sesiones Activas</CardTitle>
+                    <CardDescription>
+                      Administre los dispositivos conectados a su cuenta
+                    </CardDescription>
+                  </div>
+                  {sessions.filter(s => !s.current).length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[var(--color-error)]"
+                      onClick={handleCloseAllSessions}
+                    >
+                      Cerrar todas
+                    </Button>
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <SessionItem
-                    device="MacBook Pro"
-                    location="San José, Costa Rica"
-                    lastActive="Ahora mismo"
-                    current
-                  />
-                  <SessionItem
-                    device="iPhone 14"
-                    location="San José, Costa Rica"
-                    lastActive="Hace 2 horas"
-                  />
-                  <SessionItem
-                    device="Windows PC"
-                    location="Heredia, Costa Rica"
-                    lastActive="Hace 3 días"
-                  />
+                  {sessions.map((session) => {
+                    const DeviceIcon = getDeviceIcon(session.deviceType);
+                    return (
+                      <div
+                        key={session.id}
+                        className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-3 lg:p-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <DeviceIcon className="h-5 w-5 text-[var(--color-text-muted)]" />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium text-[var(--color-text-primary)] lg:text-base">
+                                {session.device}
+                              </p>
+                              {session.current && (
+                                <Badge variant="success" size="sm">
+                                  Actual
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-xs text-[var(--color-text-muted)] lg:text-sm">
+                              {session.location} • {session.lastActive}
+                            </p>
+                          </div>
+                        </div>
+                        {!session.current && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-[var(--color-error)]"
+                            onClick={() => handleCloseSession(session.id)}
+                          >
+                            <X className="h-4 w-4 lg:mr-1" />
+                            <span className="hidden lg:inline">Cerrar</span>
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {sessions.length === 1 && (
+                    <p className="py-4 text-center text-sm text-[var(--color-text-muted)]">
+                      No hay otras sesiones activas
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -427,7 +614,7 @@ export default function SettingsPage() {
                   <label className="mb-3 block text-sm font-medium text-[var(--color-text-primary)]">
                     Tema
                   </label>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-2 lg:gap-3">
                     <ThemeOption
                       icon={Sun}
                       label="Claro"
@@ -509,22 +696,24 @@ function ToggleOption({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-2">
-      <div>
-        <p className="font-medium text-[var(--color-text-primary)]">{label}</p>
-        <p className="text-sm text-[var(--color-text-muted)]">{description}</p>
+    <div className="flex items-center justify-between gap-4 py-2">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-[var(--color-text-primary)] lg:text-base">{label}</p>
+        <p className="text-xs text-[var(--color-text-muted)] lg:text-sm">{description}</p>
       </div>
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className={`relative h-6 w-11 rounded-full transition-colors ${
-          checked ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-neutral-300)]'
-        }`}
+        className={cn(
+          'relative h-6 w-11 shrink-0 rounded-full transition-colors',
+          checked ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-border)]'
+        )}
       >
         <span
-          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-            checked ? 'translate-x-5' : 'translate-x-0'
-          }`}
+          className={cn(
+            'absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+            checked && 'translate-x-5'
+          )}
         />
       </button>
     </div>
@@ -546,63 +735,27 @@ function ThemeOption({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center gap-2 rounded-lg border p-4 transition-all ${
+      className={cn(
+        'flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all lg:gap-2 lg:p-4',
         selected
-          ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]'
+          ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
           : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
-      }`}
+      )}
     >
       <Icon
-        className={`h-6 w-6 ${
+        className={cn(
+          'h-5 w-5 lg:h-6 lg:w-6',
           selected ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'
-        }`}
+        )}
       />
       <span
-        className={`text-sm font-medium ${
+        className={cn(
+          'text-xs font-medium lg:text-sm',
           selected ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-secondary)]'
-        }`}
+        )}
       >
         {label}
       </span>
     </button>
-  );
-}
-
-// Session Item Component
-function SessionItem({
-  device,
-  location,
-  lastActive,
-  current,
-}: {
-  device: string;
-  location: string;
-  lastActive: string;
-  current?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-4">
-      <div className="flex items-center gap-3">
-        <Monitor className="h-5 w-5 text-[var(--color-text-muted)]" />
-        <div>
-          <div className="flex items-center gap-2">
-            <p className="font-medium text-[var(--color-text-primary)]">{device}</p>
-            {current && (
-              <Badge variant="success" size="sm">
-                Actual
-              </Badge>
-            )}
-          </div>
-          <p className="text-sm text-[var(--color-text-muted)]">
-            {location} • {lastActive}
-          </p>
-        </div>
-      </div>
-      {!current && (
-        <Button variant="ghost" size="sm" className="text-[var(--color-error)]">
-          Cerrar sesión
-        </Button>
-      )}
-    </div>
   );
 }
