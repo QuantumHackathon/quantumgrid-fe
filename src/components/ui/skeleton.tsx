@@ -48,7 +48,7 @@ export function Skeleton({
 // Pre-built skeleton patterns for common use cases
 export function SkeletonCard() {
   return (
-    <div className="rounded-lg border border-[var(--color-border)] bg-white p-4">
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
       <Skeleton variant="text" className="mb-2 h-3 w-1/3" />
       <Skeleton variant="text" className="mb-1 h-6 w-1/2" />
       <Skeleton variant="text" className="h-3 w-1/4" />
@@ -58,7 +58,7 @@ export function SkeletonCard() {
 
 export function SkeletonChart() {
   return (
-    <div className="rounded-lg border border-[var(--color-border)] bg-white p-4">
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
       <Skeleton variant="text" className="mb-4 h-5 w-1/4" />
       <Skeleton variant="rectangular" className="h-64 w-full" />
     </div>
@@ -67,7 +67,7 @@ export function SkeletonChart() {
 
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="rounded-lg border border-[var(--color-border)] bg-white">
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="border-b border-[var(--color-border)] p-4">
         <div className="flex gap-4">
           <Skeleton className="h-4 w-1/4" />

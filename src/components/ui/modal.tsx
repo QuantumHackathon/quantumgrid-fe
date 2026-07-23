@@ -76,7 +76,7 @@ export function Modal({
       {/* Modal Content */}
       <div
         className={cn(
-          'relative z-10 w-full rounded-lg bg-white shadow-xl animate-scale-in',
+          'relative z-10 w-full rounded-lg bg-[var(--color-surface)] shadow-xl animate-scale-in',
           sizes[size]
         )}
       >

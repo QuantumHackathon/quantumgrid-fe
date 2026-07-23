@@ -18,7 +18,7 @@ export function ChartSkeleton({
   return (
     <div
       className={cn(
-        'flex items-center justify-center rounded-lg bg-[var(--color-neutral-100)]',
+        'flex items-center justify-center rounded-lg bg-[var(--color-surface-elevated)]',
         className
       )}
       style={{ height: heightValue, width: '100%' }}

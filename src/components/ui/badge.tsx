@@ -14,7 +14,7 @@ export function Badge({
 }: BadgeProps) {
   const variants = {
     default:
-      'bg-[var(--color-neutral-100)] text-[var(--color-text-secondary)]',
+      'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]',
     success:
       'bg-[var(--color-success-light)] text-[var(--color-success-dark)]',
     warning:

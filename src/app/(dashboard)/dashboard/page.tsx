@@ -138,21 +138,22 @@ export default function DashboardPage() {
                   <stop offset="95%" stopColor="#006341" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
               <XAxis
                 dataKey="hour"
-                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tick={{ fontSize: 12, fill: 'rgba(255,255,255,0.5)' }}
                 tickFormatter={(value) => `${value}:00`}
               />
               <YAxis
-                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tick={{ fontSize: 12, fill: 'rgba(255,255,255,0.5)' }}
                 tickFormatter={(value) => `${value} MW`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #E5E7EB',
+                  backgroundColor: '#15151f',
+                  border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: '8px',
+                  color: '#fff',
                 }}
                 formatter={(value) => [`${Number(value).toFixed(0)} MW`, '']}
                 labelFormatter={(label) => `${label}:00 hrs`}
@@ -200,9 +201,10 @@ export default function DashboardPage() {
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #E5E7EB',
+                  backgroundColor: '#15151f',
+                  border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: '8px',
+                  color: '#fff',
                 }}
                 formatter={(value, _name, props) => [
                   `${value} MW (${props.payload.percentage}%)`,
@@ -254,7 +256,7 @@ export default function DashboardPage() {
               Configurar
             </Button>
           </div>
-          <div className="rounded-lg border border-[var(--color-border)] bg-white">
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
             {mockAlerts.map((alert, idx) => (
               <div
                 key={alert.id}

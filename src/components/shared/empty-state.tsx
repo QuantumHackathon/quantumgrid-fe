@@ -48,7 +48,7 @@ export function EmptyState({
         className
       )}
     >
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-neutral-100)]">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-surface-elevated)]">
         {icon || <Icon className="h-8 w-8 text-[var(--color-text-muted)]" />}
       </div>
       <h3 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">

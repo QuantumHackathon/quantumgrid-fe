@@ -91,7 +91,7 @@ export function ErrorState({
           <summary className="cursor-pointer text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]">
             Ver detalles técnicos
           </summary>
-          <pre className="mt-2 overflow-auto rounded-lg bg-[var(--color-neutral-100)] p-3 text-left text-xs text-[var(--color-text-secondary)]">
+          <pre className="mt-2 overflow-auto rounded-lg bg-[var(--color-surface-elevated)] p-3 text-left text-xs text-[var(--color-text-secondary)]">
             {details}
           </pre>
         </details>

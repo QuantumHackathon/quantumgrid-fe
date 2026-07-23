@@ -45,7 +45,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={cn(
-              'flex h-10 w-full appearance-none rounded-lg border bg-white pr-10 text-sm outline-none transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)]',
+              'flex h-10 w-full appearance-none rounded-lg border bg-[var(--color-surface-elevated)] pr-10 text-sm outline-none transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)]',
               'focus:ring-1 focus:shadow-sm',
               leftIcon ? 'pl-10' : 'pl-3',
               error

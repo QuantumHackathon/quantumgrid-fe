@@ -34,7 +34,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--color-border)] bg-white transition-all duration-200',
+        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] transition-all duration-200',
         sidebarCollapsed ? 'w-16' : 'w-[var(--sidebar-width)]'
       )}
     >
@@ -70,7 +70,7 @@ export function Sidebar() {
                     'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)]',
                     isActive
                       ? 'bg-[var(--color-primary)] text-white shadow-sm'
-                      : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-text-primary)] hover:translate-x-0.5',
+                      : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)] hover:translate-x-0.5',
                     sidebarCollapsed && 'justify-center px-2 hover:translate-x-0'
                   )}
                   title={sidebarCollapsed ? item.label : undefined}
@@ -93,7 +93,7 @@ export function Sidebar() {
       <div className="border-t border-[var(--color-border)] p-3">
         <button
           onClick={toggleSidebarCollapse}
-          className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--color-text-muted)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-text-primary)]"
+          className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--color-text-muted)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"
           aria-label={sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'}
         >
           {sidebarCollapsed ? (

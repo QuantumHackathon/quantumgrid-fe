@@ -113,10 +113,10 @@ export function DataTable<T>({
 
   if (isLoading) {
     return (
-      <div className={cn('overflow-hidden rounded-lg border border-[var(--color-border)] bg-white', className)}>
+      <div className={cn('overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]', className)}>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b border-[var(--color-border)] bg-[var(--color-neutral-50)]">
+            <thead className="border-b border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
               <tr>
                 {columns.map((column) => (
                   <th
@@ -148,17 +148,17 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className={cn('rounded-lg border border-[var(--color-border)] bg-white p-8 text-center', className)}>
+      <div className={cn('rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center', className)}>
         <p className="text-[var(--color-text-muted)]">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className={cn('overflow-hidden rounded-lg border border-[var(--color-border)] bg-white', className)}>
+    <div className={cn('overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]', className)}>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="border-b border-[var(--color-border)] bg-[var(--color-neutral-50)]">
+          <thead className="border-b border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
             <tr>
               {columns.map((column) => (
                 <th
@@ -167,7 +167,7 @@ export function DataTable<T>({
                     'px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)]',
                     column.align === 'center' && 'text-center',
                     column.align === 'right' && 'text-right',
-                    column.sortable && 'cursor-pointer select-none hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-text-primary)]'
+                    column.sortable && 'cursor-pointer select-none hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]'
                   )}
                   style={{ width: column.width }}
                   onClick={() => column.sortable && handleSort(String(column.key))}
@@ -188,8 +188,8 @@ export function DataTable<T>({
                   key={rowKey}
                   className={cn(
                     'transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)]',
-                    onRowClick && 'cursor-pointer hover:bg-[var(--color-neutral-50)]',
-                    selectedRow === rowKey && 'bg-[var(--color-primary-50)]'
+                    onRowClick && 'cursor-pointer hover:bg-[var(--color-surface-elevated)]',
+                    selectedRow === rowKey && 'bg-[var(--color-primary-glow)]'
                   )}
                   onClick={() => onRowClick?.(row)}
                 >
