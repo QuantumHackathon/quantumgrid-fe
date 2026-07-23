@@ -66,9 +66,9 @@ export function CTASection() {
               variants={staggerItem}
               className="flex justify-center"
             >
-              <Link href="/login">
+              <Link href="/dashboard">
                 <Button size="lg" className="gap-2 group">
-                  Get Started
+                  Open Dashboard
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>

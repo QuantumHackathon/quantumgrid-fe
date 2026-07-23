@@ -53,10 +53,10 @@ export function Footer() {
                 Benefits
               </Link>
               <Link
-                href="/login"
+                href="/dashboard"
                 className="text-sm text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
               >
-                Get Started
+                Dashboard
               </Link>
             </nav>
           </div>

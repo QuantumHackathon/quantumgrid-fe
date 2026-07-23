@@ -61,10 +61,10 @@ export function PublicHeader() {
             Benefits
           </Link>
           <Link
-            href="/login"
+            href="/dashboard"
             className="inline-flex h-9 items-center justify-center rounded-lg bg-[var(--color-primary)] px-4 text-sm font-medium text-[var(--color-text-inverse)] transition-all hover:bg-[var(--color-primary-light)] hover:shadow-[var(--glow-primary)]"
           >
-            Get Started
+            Open Dashboard
           </Link>
         </nav>
 
