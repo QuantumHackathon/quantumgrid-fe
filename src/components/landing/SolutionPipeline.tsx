@@ -4,38 +4,43 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { staggerContainer, staggerItem } from '@/lib/motion';
-import { Network, Box, Cpu, Sparkles, Target } from 'lucide-react';
+import { Activity, Box, Search, Sparkles, Target } from 'lucide-react';
 
 const pipelineSteps = [
   {
-    icon: Network,
-    title: 'Power Grid',
-    description: 'Real-time data from sensors and meters across the network',
+    icon: Activity,
+    title: 'Simulate',
+    description: 'Model the grid with real-time data and physics-based simulation',
     gradient: 'from-[var(--color-primary)] to-[var(--color-primary-dark)]',
+    label: 'Input',
+  },
+  {
+    icon: Search,
+    title: 'Analyze',
+    description: 'Detect bottlenecks, assess stability, identify opportunities',
+    gradient: 'from-[var(--color-primary)] to-[var(--color-tertiary)]',
+    label: 'Classical',
   },
   {
     icon: Box,
-    title: 'Digital Twin',
-    description: 'Virtual replica modeling every component and connection',
-    gradient: 'from-[var(--color-primary)] to-[var(--color-tertiary)]',
-  },
-  {
-    icon: Cpu,
-    title: 'Simulation Engine',
-    description: 'Run thousands of scenarios in seconds, not days',
+    title: 'Generate',
+    description: 'Create millions of possible operating configurations',
     gradient: 'from-[var(--color-tertiary)] to-[var(--color-accent)]',
+    label: 'Classical',
   },
   {
     icon: Sparkles,
-    title: 'Optimization',
-    description: 'Quantum-inspired algorithms find optimal solutions',
+    title: 'Optimize',
+    description: 'Quantum-inspired search finds best configurations fast',
     gradient: 'from-[var(--color-accent)] to-[var(--color-secondary)]',
+    label: 'Quantum',
   },
   {
     icon: Target,
-    title: 'Recommendations',
-    description: 'Actionable insights delivered to decision makers',
+    title: 'Recommend',
+    description: 'Deliver actionable decisions to grid operators',
     gradient: 'from-[var(--color-secondary)] to-[var(--color-secondary-dark)]',
+    label: 'Output',
   },
 ];
 
@@ -44,7 +49,7 @@ export function SolutionPipeline() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="solution" className="relative py-24 bg-[var(--color-background-secondary)]">
+    <section id="solution" className="relative py-24">
       <div className="mx-auto max-w-6xl px-4" ref={ref}>
         <motion.div
           variants={staggerContainer}
@@ -56,19 +61,20 @@ export function SolutionPipeline() {
             variants={staggerItem}
             className="inline-block text-sm font-medium text-[var(--color-secondary)] mb-2"
           >
-            THE SOLUTION
+            THE PLATFORM
           </motion.span>
           <motion.h2
             variants={staggerItem}
             className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4"
           >
-            From Data to Decisions
+            From Grid Data to Smart Decisions
           </motion.h2>
           <motion.p
             variants={staggerItem}
             className="max-w-2xl mx-auto text-[var(--color-text-secondary)]"
           >
-            Our end-to-end pipeline transforms raw grid data into optimized recommendations
+            Our platform simulates the grid, analyzes the network, optimizes energy distribution,
+            and recommends better operational decisions.
           </motion.p>
         </motion.div>
 
@@ -80,7 +86,7 @@ export function SolutionPipeline() {
           className="relative"
         >
           {/* Connecting line */}
-          <div className="hidden lg:block absolute top-24 left-[10%] right-[10%] h-1 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-tertiary)] via-[var(--color-accent)] to-[var(--color-secondary)] opacity-30" />
+          <div className="hidden lg:block absolute top-[4.5rem] left-[10%] right-[10%] h-1 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-tertiary)] via-[var(--color-accent)] to-[var(--color-secondary)] opacity-30" />
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {pipelineSteps.map((step, index) => (
@@ -91,9 +97,17 @@ export function SolutionPipeline() {
                 className="relative group"
               >
                 <div className="flex flex-col items-center p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] transition-all duration-300 group-hover:border-[var(--color-border-strong)] group-hover:shadow-[var(--glow-soft)]">
-                  {/* Step number */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-surface-elevated)] border border-[var(--color-border)] text-xs font-semibold text-[var(--color-text-muted)]">
-                    {index + 1}
+                  {/* Label badge */}
+                  <div
+                    className={`absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                      step.label === 'Quantum'
+                        ? 'bg-[var(--color-tertiary)] bg-opacity-20 text-[var(--color-tertiary)] border border-[var(--color-tertiary)] border-opacity-30'
+                        : step.label === 'Classical'
+                          ? 'bg-[var(--color-primary)] bg-opacity-20 text-[var(--color-primary)] border border-[var(--color-primary)] border-opacity-30'
+                          : 'bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border border-[var(--color-border)]'
+                    }`}
+                  >
+                    {step.label}
                   </div>
 
                   {/* Icon */}

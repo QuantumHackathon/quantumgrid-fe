@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { staggerContainer, staggerItem } from '@/lib/motion';
-import { ArrowRight, Mail } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function CTASection() {
   const ref = useRef(null);
@@ -64,40 +64,14 @@ export function CTASection() {
 
             <motion.div
               variants={staggerItem}
-              className="flex flex-col sm:flex-row justify-center gap-4"
+              className="flex justify-center"
             >
               <Link href="/login">
-                <Button size="lg" className="gap-2 group w-full sm:w-auto">
+                <Button size="lg" className="gap-2 group">
                   Get Started
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="mailto:contact@qgi.energy">
-                <Button variant="glass" size="lg" className="gap-2 w-full sm:w-auto">
-                  <Mail className="h-4 w-4" />
-                  Contact Sales
-                </Button>
-              </Link>
-            </motion.div>
-
-            {/* Trust indicators */}
-            <motion.div
-              variants={staggerItem}
-              className="mt-12 pt-8 border-t border-[var(--color-border)]"
-            >
-              <p className="text-sm text-[var(--color-text-muted)] mb-4">
-                Trusted by industry leaders
-              </p>
-              <div className="flex flex-wrap justify-center gap-8 opacity-50">
-                {['Energy Co.', 'GridTech', 'PowerNet', 'SmartGrid'].map((company) => (
-                  <span
-                    key={company}
-                    className="text-lg font-semibold text-[var(--color-text-muted)]"
-                  >
-                    {company}
-                  </span>
-                ))}
-              </div>
             </motion.div>
           </div>
         </motion.div>

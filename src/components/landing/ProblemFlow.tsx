@@ -4,38 +4,48 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { staggerContainer, staggerItem } from '@/lib/motion';
-import { Cpu, Server, Zap, AlertTriangle, Brain } from 'lucide-react';
+import { Cpu, Server, Zap, Network, HelpCircle } from 'lucide-react';
 
 const problemSteps = [
   {
     icon: Cpu,
-    label: 'AI Revolution',
+    label: 'AI Explosion',
     color: 'var(--color-tertiary)',
-    description: 'AI systems multiply',
+    description: 'AI models grow exponentially',
+    stat: '10x',
+    statLabel: 'compute growth/year',
   },
   {
     icon: Server,
     label: 'Data Centers',
     color: 'var(--color-primary)',
-    description: 'Infrastructure expands',
+    description: 'Infrastructure scales rapidly',
+    stat: '35%',
+    statLabel: 'of new energy demand',
   },
   {
     icon: Zap,
-    label: 'Energy Demand',
+    label: 'Energy Surge',
     color: 'var(--color-warning)',
-    description: 'Consumption surges',
+    description: 'Grids face unprecedented load',
+    stat: '2x',
+    statLabel: 'demand by 2030',
   },
   {
-    icon: AlertTriangle,
-    label: 'Grid Stress',
+    icon: Network,
+    label: 'Grid Complexity',
+    color: 'var(--color-accent)',
+    description: 'Millions of operating scenarios',
+    stat: '1M+',
+    statLabel: 'possible configurations',
+  },
+  {
+    icon: HelpCircle,
+    label: 'Critical Decisions',
     color: 'var(--color-error)',
-    description: 'Systems strain',
-  },
-  {
-    icon: Brain,
-    label: 'Smart Decisions',
-    color: 'var(--color-secondary)',
-    description: 'Intelligence needed',
+    description: 'Operators need intelligent support',
+    stat: '24/7',
+    statLabel: 'real-time optimization',
   },
 ];
 
@@ -62,13 +72,14 @@ export function ProblemFlow() {
             variants={staggerItem}
             className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4"
           >
-            AI is Reshaping Energy Demand
+            AI is Transforming Energy Demand
           </motion.h2>
           <motion.p
             variants={staggerItem}
             className="max-w-2xl mx-auto text-[var(--color-text-secondary)]"
           >
-            The exponential growth of AI creates a cascade effect on energy infrastructure
+            The rise of AI creates a cascade effect: more compute, more data centers,
+            more energy demand, and increasingly complex grids that require intelligent decision support.
           </motion.p>
         </motion.div>
 
@@ -77,16 +88,16 @@ export function ProblemFlow() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="relative flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0"
+          className="relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-2"
         >
           {/* Connection line */}
-          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-tertiary)] via-[var(--color-warning)] to-[var(--color-secondary)] opacity-30" />
+          <div className="hidden md:block absolute top-12 left-[8%] right-[8%] h-[2px] bg-gradient-to-r from-[var(--color-tertiary)] via-[var(--color-warning)] to-[var(--color-error)] opacity-30" />
 
           {problemSteps.map((step, index) => (
             <motion.div
               key={step.label}
               variants={staggerItem}
-              className="relative flex flex-col items-center"
+              className="relative flex flex-col items-center flex-1"
             >
               {/* Icon container */}
               <motion.div
@@ -103,26 +114,35 @@ export function ProblemFlow() {
                 />
               </motion.div>
 
-              {/* Label */}
+              {/* Label and stats */}
               <div className="mt-4 text-center">
                 <div className="font-semibold text-[var(--color-text-primary)]">
                   {step.label}
                 </div>
-                <div className="text-sm text-[var(--color-text-muted)]">
+                <div className="text-sm text-[var(--color-text-muted)] mb-2">
                   {step.description}
+                </div>
+                <div
+                  className="text-lg font-bold"
+                  style={{ color: step.color }}
+                >
+                  {step.stat}
+                </div>
+                <div className="text-xs text-[var(--color-text-muted)]">
+                  {step.statLabel}
                 </div>
               </div>
 
               {/* Arrow (except last item) */}
               {index < problemSteps.length - 1 && (
-                <div className="hidden md:flex absolute -right-8 top-1/2 -translate-y-1/2 translate-x-full items-center">
+                <div className="hidden md:flex absolute -right-2 top-8 translate-x-full items-center z-20">
                   <motion.svg
-                    width="24"
-                    height="24"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     initial={{ opacity: 0, x: -10 }}
-                    animate={isInView ? { opacity: 0.5, x: 0 } : { opacity: 0 }}
+                    animate={isInView ? { opacity: 0.6, x: 0 } : { opacity: 0 }}
                     transition={{ delay: index * 0.1 + 0.5 }}
                   >
                     <path

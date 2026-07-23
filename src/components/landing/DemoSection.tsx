@@ -41,19 +41,19 @@ export function DemoSection() {
             variants={staggerItem}
             className="inline-block text-sm font-medium text-[var(--color-accent)] mb-2"
           >
-            LIVE DEMO
+            SIMULATION
           </motion.span>
           <motion.h2
             variants={staggerItem}
             className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4"
           >
-            See the Difference
+            Before vs. After Optimization
           </motion.h2>
           <motion.p
             variants={staggerItem}
             className="max-w-2xl mx-auto text-[var(--color-text-secondary)]"
           >
-            Toggle between standard operation and optimized mode to see the impact
+            See how hybrid intelligence transforms grid operations in real-time
           </motion.p>
         </motion.div>
 

@@ -4,6 +4,7 @@ import {
   HeroSection,
   ProblemFlow,
   SolutionPipeline,
+  HybridIntelligence,
   DemoSection,
   BenefitCards,
   FutureVisionCards,
@@ -19,6 +20,7 @@ export default function LandingPage() {
         <HeroSection />
         <ProblemFlow />
         <SolutionPipeline />
+        <HybridIntelligence />
         <DemoSection />
         <BenefitCards />
         <FutureVisionCards />

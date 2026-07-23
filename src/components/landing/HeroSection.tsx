@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { staggerContainer, staggerItem } from '@/lib/motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export function HeroSection() {
   return (
@@ -26,7 +26,7 @@ export function HeroSection() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-secondary)]" />
             </span>
             <span className="text-sm font-medium text-[var(--color-text-secondary)]">
-              Powering the AI Era
+              Hybrid AI + Quantum Optimization
             </span>
           </motion.div>
 
@@ -36,11 +36,11 @@ export function HeroSection() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
           >
             <span className="text-[var(--color-text-primary)]">
-              Intelligent Decisions
+              The AI Revolution
             </span>
             <br />
             <span className="text-gradient-hero">
-              for Energy Infrastructure
+              Requires an Energy Revolution
             </span>
           </motion.h1>
 
@@ -49,8 +49,9 @@ export function HeroSection() {
             variants={staggerItem}
             className="max-w-2xl text-lg md:text-xl text-[var(--color-text-secondary)]"
           >
-            AI is transforming our world—and driving unprecedented energy demand.
-            Prepare your grid for the future with simulation-powered intelligence.
+            AI data centers are reshaping global energy demand. Our platform combines
+            classical simulation with quantum-inspired optimization to help grid operators
+            make smarter decisions, faster.
           </motion.p>
 
           {/* CTAs */}
@@ -60,14 +61,14 @@ export function HeroSection() {
           >
             <Link href="#demo">
               <Button size="lg" className="gap-2 group">
-                Explore the Simulation
+                See the Impact
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="#solution">
+            <Link href="#hybrid">
               <Button variant="glass" size="lg" className="gap-2">
-                <Play className="h-4 w-4" />
-                Learn More
+                <Sparkles className="h-4 w-4" />
+                How It Works
               </Button>
             </Link>
           </motion.div>
@@ -78,9 +79,9 @@ export function HeroSection() {
             className="mt-12 grid grid-cols-3 gap-8 md:gap-16"
           >
             {[
-              { value: '40%', label: 'Lower Grid Losses' },
-              { value: '10x', label: 'Faster Decisions' },
-              { value: '99.9%', label: 'Grid Reliability' },
+              { value: '1M+', label: 'Scenarios Analyzed' },
+              { value: '10x', label: 'Faster Optimization' },
+              { value: '40%', label: 'Reduced Grid Losses' },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-[var(--color-primary)]">

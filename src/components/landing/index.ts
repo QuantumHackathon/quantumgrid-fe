@@ -3,6 +3,7 @@ export { ScrollProgress } from './ScrollProgress';
 export { HeroSection } from './HeroSection';
 export { ProblemFlow } from './ProblemFlow';
 export { SolutionPipeline } from './SolutionPipeline';
+export { HybridIntelligence } from './HybridIntelligence';
 export { DemoSection } from './DemoSection';
 export { BenefitCards } from './BenefitCards';
 export { FutureVisionCards } from './FutureVisionCards';

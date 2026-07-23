@@ -4,43 +4,53 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { staggerContainer, staggerItem } from '@/lib/motion';
-import { Server, Building2, Sun, Car, MapPin } from 'lucide-react';
+import { Server, Sun, Zap, Car, Globe } from 'lucide-react';
 
 const visions = [
   {
     icon: Server,
     title: 'AI Data Centers',
-    description: 'Power the next generation of AI infrastructure with intelligent load management',
+    description: 'Optimize power delivery to GPU clusters and hyperscale facilities driving the AI revolution',
     gradient: 'from-[var(--color-tertiary)] to-[var(--color-primary)]',
     bgGlow: 'rgba(168, 85, 247, 0.1)',
-  },
-  {
-    icon: Building2,
-    title: 'Smart Cities',
-    description: 'Enable connected urban infrastructure with predictive energy distribution',
-    gradient: 'from-[var(--color-primary)] to-[var(--color-secondary)]',
-    bgGlow: 'rgba(0, 212, 255, 0.1)',
+    stat: '35%',
+    statLabel: 'of new load',
   },
   {
     icon: Sun,
-    title: 'Renewable Energy',
-    description: 'Maximize solar and wind integration with real-time balancing algorithms',
+    title: 'Renewable Integration',
+    description: 'Balance intermittent solar and wind with intelligent demand-side management',
     gradient: 'from-[var(--color-secondary)] to-[var(--color-accent)]',
     bgGlow: 'rgba(0, 255, 136, 0.1)',
+    stat: '60%',
+    statLabel: 'more capacity',
+  },
+  {
+    icon: Zap,
+    title: 'Grid Congestion',
+    description: 'Identify and resolve transmission bottlenecks before they cause outages',
+    gradient: 'from-[var(--color-warning)] to-[var(--color-error)]',
+    bgGlow: 'rgba(255, 107, 53, 0.1)',
+    stat: '90%',
+    statLabel: 'fewer events',
   },
   {
     icon: Car,
-    title: 'Electric Vehicles',
-    description: 'Scale EV charging infrastructure without overwhelming the grid',
-    gradient: 'from-[var(--color-accent)] to-[var(--color-warning)]',
-    bgGlow: 'rgba(255, 107, 53, 0.1)',
+    title: 'EV Infrastructure',
+    description: 'Scale charging networks intelligently without overwhelming local distribution',
+    gradient: 'from-[var(--color-accent)] to-[var(--color-secondary)]',
+    bgGlow: 'rgba(0, 255, 136, 0.1)',
+    stat: '3x',
+    statLabel: 'charging capacity',
   },
   {
-    icon: MapPin,
-    title: 'National Infrastructure',
-    description: 'Build resilient, future-proof energy networks at country scale',
+    icon: Globe,
+    title: 'National Grids',
+    description: 'Support country-scale infrastructure planning with comprehensive simulation',
     gradient: 'from-[var(--color-primary)] to-[var(--color-tertiary)]',
     bgGlow: 'rgba(0, 212, 255, 0.1)',
+    stat: '100+',
+    statLabel: 'GW networks',
   },
 ];
 
@@ -61,19 +71,20 @@ export function FutureVisionCards() {
             variants={staggerItem}
             className="inline-block text-sm font-medium text-[var(--color-tertiary)] mb-2"
           >
-            FUTURE VISION
+            USE CASES
           </motion.span>
           <motion.h2
             variants={staggerItem}
             className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4"
           >
-            Built for Tomorrow
+            Powering the AI Era
           </motion.h2>
           <motion.p
             variants={staggerItem}
             className="max-w-2xl mx-auto text-[var(--color-text-secondary)]"
           >
-            Our platform is designed to support the most demanding use cases of the future
+            From hyperscale data centers to national infrastructure, our platform scales
+            to meet the energy challenges of an AI-driven world.
           </motion.p>
         </motion.div>
 
@@ -109,11 +120,21 @@ export function FutureVisionCards() {
                 />
 
                 <div className="relative z-10">
-                  {/* Icon */}
-                  <div
-                    className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${vision.gradient} mb-4`}
-                  >
-                    <vision.icon className="h-6 w-6 text-white" />
+                  {/* Header with icon and stat */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div
+                      className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${vision.gradient}`}
+                    >
+                      <vision.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-xl font-bold bg-gradient-to-br ${vision.gradient} bg-clip-text text-transparent`}>
+                        {vision.stat}
+                      </div>
+                      <div className="text-xs text-[var(--color-text-muted)]">
+                        {vision.statLabel}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Content */}
