@@ -1,6 +1,6 @@
 /**
  * UI Components
- * SIENA-CR Design System Primitives
+ * QuantumGrid Design System Primitives
  */
 
 // Button

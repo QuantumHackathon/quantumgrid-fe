@@ -1,5 +1,5 @@
 /**
- * SIENA-CR Error Handling
+ * QuantumGrid Error Handling
  * Custom error classes for API and application errors
  */
 

@@ -1,5 +1,5 @@
 /**
- * Mock Data for SIENA-CR
+ * Mock Data for QuantumGrid
  * Development and demonstration data
  */
 

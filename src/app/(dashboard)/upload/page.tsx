@@ -205,8 +205,8 @@ export default function UploadPage() {
             className={cn(
               'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-12 transition-colors',
               isDragging
-                ? 'border-[var(--color-primary)] bg-[var(--color-primary-light)]'
-                : 'border-[var(--color-border)] bg-[var(--color-neutral-50)]'
+                ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
+                : 'border-[var(--color-border)] bg-[var(--color-surface-elevated)]'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -224,7 +224,7 @@ export default function UploadPage() {
                 'mb-4 flex h-14 w-14 items-center justify-center rounded-full transition-colors',
                 isDragging
                   ? 'bg-[var(--color-primary)] text-white'
-                  : 'bg-[var(--color-neutral-200)] text-[var(--color-text-muted)]'
+                  : 'bg-[var(--color-border)] text-[var(--color-text-muted)]'
               )}
             >
               <Upload className="h-7 w-7" />
@@ -257,7 +257,7 @@ export default function UploadPage() {
               return (
                 <div
                   key={index}
-                  className="flex items-center gap-4 rounded-lg bg-[var(--color-neutral-50)] p-4"
+                  className="flex items-center gap-4 rounded-lg bg-[var(--color-surface-elevated)] p-4"
                 >
                   <FileSpreadsheet className="h-8 w-8 text-[var(--color-primary)]" />
                   <div className="min-w-0 flex-1">
@@ -323,7 +323,7 @@ export default function UploadPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-lg bg-[var(--color-neutral-50)] p-4">
+            <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4">
               <h4 className="mb-2 font-medium text-[var(--color-text-primary)]">
                 Datos de consumo
               </h4>
@@ -331,7 +331,7 @@ export default function UploadPage() {
                 Columnas: fecha, hora, región, consumo_mw
               </p>
             </div>
-            <div className="rounded-lg bg-[var(--color-neutral-50)] p-4">
+            <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4">
               <h4 className="mb-2 font-medium text-[var(--color-text-primary)]">
                 Datos de generación
               </h4>
@@ -339,7 +339,7 @@ export default function UploadPage() {
                 Columnas: fecha, planta, tipo, generacion_mw
               </p>
             </div>
-            <div className="rounded-lg bg-[var(--color-neutral-50)] p-4">
+            <div className="rounded-lg bg-[var(--color-surface-elevated)] p-4">
               <h4 className="mb-2 font-medium text-[var(--color-text-primary)]">
                 Datos de infraestructura
               </h4>

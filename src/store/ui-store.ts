@@ -43,7 +43,7 @@ export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
       // Initial state
-      sidebarOpen: true,
+      sidebarOpen: false,
       sidebarCollapsed: false,
       theme: 'light',
       notifications: [],
@@ -84,7 +84,7 @@ export const useUIStore = create<UIState>()(
       setGlobalLoading: (loading) => set({ globalLoading: loading }),
     }),
     {
-      name: 'siena-ui-store',
+      name: 'quantumgrid-ui-store',
       partialize: (state) => ({
         sidebarCollapsed: state.sidebarCollapsed,
         theme: state.theme,

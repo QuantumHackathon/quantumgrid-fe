@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión',
-  description: 'Acceso al portal SIENA-CR',
+  description: 'Acceso al portal QuantumGrid',
 };
 
 export default function LoginPage() {
@@ -13,10 +13,10 @@ export default function LoginPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white">
-            <span className="text-2xl font-bold">S</span>
+            <span className="text-2xl font-bold">Q</span>
           </div>
           <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
-            Acceder a SIENA-CR
+            Acceder a QuantumGrid
           </h1>
           <p className="mt-2 text-[var(--color-text-muted)]">
             Sistema de Inteligencia Energética Nacional

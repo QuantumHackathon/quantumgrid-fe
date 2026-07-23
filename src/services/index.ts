@@ -1,5 +1,5 @@
 /**
- * SIENA-CR API Services
+ * QuantumGrid API Services
  * Export all services from this file
  */
 

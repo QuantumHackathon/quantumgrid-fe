@@ -1,5 +1,5 @@
 /**
- * SIENA-CR API Client
+ * QuantumGrid API Client
  * Base fetch wrapper with error handling, interceptors, and retry logic
  */
 

@@ -21,14 +21,16 @@ export default function DashboardLayout({
       <div
         className={cn(
           'flex flex-1 flex-col transition-all duration-200',
-          sidebarCollapsed ? 'ml-16' : 'ml-[var(--sidebar-width)]'
+          // No margin on mobile, margin on desktop
+          'ml-0 lg:ml-[var(--sidebar-width)]',
+          sidebarCollapsed && 'lg:ml-16'
         )}
       >
         {/* Topbar */}
         <Topbar />
 
         {/* Page Content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );

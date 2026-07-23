@@ -63,8 +63,8 @@ export const InsightCard = memo(function InsightCard({
   return (
     <Card
       className={cn(
-        'cursor-pointer transition-all hover:shadow-md',
-        onClick && 'hover:border-[var(--color-primary)]',
+        'transition-all',
+        onClick && 'cursor-pointer hover:shadow-md hover:border-[var(--color-primary)] active:scale-[0.99]',
         className
       )}
       onClick={handleClick}

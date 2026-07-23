@@ -1,6 +1,6 @@
 /**
  * Shared Components
- * SIENA-CR Composite Components
+ * QuantumGrid Composite Components
  */
 
 // Metric Card

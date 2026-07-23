@@ -2,20 +2,20 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Acerca de',
-  description: 'Información sobre SIENA-CR y su misión',
+  description: 'Información sobre QuantumGrid y su misión',
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
       <h1 className="mb-6 text-3xl font-bold text-[var(--color-text-primary)]">
-        Acerca de SIENA-CR
+        Acerca de QuantumGrid
       </h1>
 
       <div className="prose prose-lg max-w-none">
         <p className="text-[var(--color-text-secondary)]">
           El Sistema de Inteligencia Energética Nacional de Costa Rica
-          (SIENA-CR) es una plataforma de grado gubernamental diseñada para
+          (QuantumGrid) es una plataforma de grado gubernamental diseñada para
           optimizar la gestión de la infraestructura energética nacional.
         </p>
 
@@ -33,7 +33,7 @@ export default function AboutPage() {
           Respaldo Institucional
         </h2>
         <p className="text-[var(--color-text-secondary)]">
-          SIENA-CR es desarrollado en colaboración con el Instituto
+          QuantumGrid es desarrollado en colaboración con el Instituto
           Costarricense de Electricidad (ICE) y el Ministerio de Ambiente y
           Energía (MINAE), garantizando los más altos estándares de calidad y
           seguridad para plataformas gubernamentales.

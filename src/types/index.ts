@@ -1,5 +1,5 @@
 /**
- * SIENA-CR Type Definitions
+ * QuantumGrid Type Definitions
  * Sistema de Inteligencia Energética Nacional
  */
 
