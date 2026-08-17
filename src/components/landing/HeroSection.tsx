@@ -17,27 +17,15 @@ export function HeroSection() {
     <>
       {/* Main Hero */}
       <section className="relative h-screen overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/logo/hero.png"
-            alt="Quantum Grid Intelligence Platform"
-            fill
-            className="object-cover object-center"
-            priority
-          />
-          {/* Gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/60 to-transparent" />
-        </div>
+        <div className="h-full mx-auto max-w-7xl px-4 lg:px-8">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-        {/* Content positioned at bottom */}
-        <div className="relative z-10 h-full flex flex-col justify-end">
-          <div className="mx-auto max-w-6xl px-4 pb-16 md:pb-24">
+            {/* Left: Text Content */}
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              className="flex flex-col items-start gap-4"
+              className="flex flex-col items-start gap-4 pt-20 lg:pt-0"
             >
               {/* Category */}
               <motion.p
@@ -51,7 +39,7 @@ export function HeroSection() {
               {/* Headline */}
               <motion.h1
                 variants={staggerItem}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-bold leading-tight"
               >
                 <span
                   className="bg-clip-text text-transparent"
@@ -68,7 +56,7 @@ export function HeroSection() {
               {/* Subtitle */}
               <motion.p
                 variants={staggerItem}
-                className="max-w-3xl text-lg md:text-xl lg:text-2xl text-[var(--color-text-secondary)]"
+                className="max-w-xl text-base md:text-lg lg:text-xl text-[var(--color-text-secondary)]"
               >
                 Engineering the energy systems behind the next generation of intelligence.
               </motion.p>
@@ -106,8 +94,24 @@ export function HeroSection() {
                   </Button>
                 </Link>
               </motion.div>
-
             </motion.div>
+
+            {/* Right: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative h-[50vh] lg:h-[80vh]"
+            >
+              <Image
+                src="/logo/hero.png"
+                alt="Quantum Grid Intelligence Platform"
+                fill
+                className="object-contain object-center"
+                priority
+              />
+            </motion.div>
+
           </div>
         </div>
       </section>
