@@ -101,15 +101,20 @@ export function HeroSection() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative h-[50vh] lg:h-[80vh] opacity-80"
+              className="relative h-[50vh] lg:h-[80vh]"
             >
-              <Image
-                src="/logo/hero.png"
-                alt="Quantum Grid Intelligence Platform"
-                fill
-                className="object-contain object-center rounded-3xl"
-                priority
-              />
+              <div
+                className="relative w-full h-full rounded-3xl overflow-hidden border border-white/10"
+                style={{ opacity: 0.85 }}
+              >
+                <Image
+                  src="/logo/hero.png"
+                  alt="Quantum Grid Intelligence Platform"
+                  fill
+                  className="object-cover object-center"
+                  priority
+                />
+              </div>
             </motion.div>
 
           </div>
