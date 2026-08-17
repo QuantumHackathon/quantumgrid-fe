@@ -1,6 +1,7 @@
 export { AnimatedBackground } from './AnimatedBackground';
 export { ScrollProgress } from './ScrollProgress';
 export { HeroSection } from './HeroSection';
+export { HeroCapabilities } from './HeroCapabilities';
 export { ProblemFlow } from './ProblemFlow';
 export { SolutionPipeline } from './SolutionPipeline';
 export { HybridIntelligence } from './HybridIntelligence';
