@@ -104,8 +104,7 @@ export function HeroSection() {
               className="relative h-[50vh] lg:h-[80vh]"
             >
               <div
-                className="relative w-full h-full rounded-3xl overflow-hidden border border-white/10"
-                style={{ opacity: 0.85 }}
+                className="relative w-full h-full rounded-3xl overflow-hidden border border-white/10 opacity-60"
               >
                 <Image
                   src="/logo/hero.png"
