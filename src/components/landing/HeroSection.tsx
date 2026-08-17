@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { staggerContainer, staggerItem } from '@/lib/motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
@@ -89,6 +90,21 @@ export function HeroSection() {
                   How It Works
                 </Button>
               </Link>
+            </motion.div>
+
+            {/* Hero Image */}
+            <motion.div
+              variants={staggerItem}
+              className="mt-12 w-full max-w-5xl"
+            >
+              <Image
+                src="/logo/hero.png"
+                alt="Quantum Grid Intelligence Platform"
+                width={1200}
+                height={675}
+                className="w-full h-auto rounded-2xl"
+                priority
+              />
             </motion.div>
 
           </motion.div>
