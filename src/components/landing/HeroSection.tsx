@@ -16,99 +16,99 @@ export function HeroSection() {
   return (
     <>
       {/* Main Hero */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-6xl px-4 py-20 text-center">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-center gap-6"
-          >
-            {/* Category */}
-            <motion.p
-              variants={staggerItem}
-              className="text-xs sm:text-sm tracking-[0.3em] uppercase font-medium"
-              style={{ color: NVIDIA_GREEN }}
-            >
-              DATA CENTERS · ENERGY · AI INFRASTRUCTURE
-            </motion.p>
+      <section className="relative h-screen overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/logo/hero.png"
+            alt="Quantum Grid Intelligence Platform"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/60 to-transparent" />
+        </div>
 
-            {/* Headline */}
-            <motion.h1
-              variants={staggerItem}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+        {/* Content positioned at bottom */}
+        <div className="relative z-10 h-full flex flex-col justify-end">
+          <div className="mx-auto max-w-6xl px-4 pb-16 md:pb-24">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col items-start gap-4"
             >
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, ${NVIDIA_GREEN} 0%, ${NVIDIA_GREEN_LIGHT} 50%, #ffffff 100%)`,
-                  backgroundSize: '200% 200%',
-                  animation: 'gradient-shift 6s ease infinite'
-                }}
+              {/* Category */}
+              <motion.p
+                variants={staggerItem}
+                className="text-xs sm:text-sm tracking-[0.3em] uppercase font-medium"
+                style={{ color: NVIDIA_GREEN }}
               >
-                Powering the Intelligence Era
-              </span>
-            </motion.h1>
+                DATA CENTERS · ENERGY · AI INFRASTRUCTURE
+              </motion.p>
 
-            {/* Subtitle */}
-            <motion.p
-              variants={staggerItem}
-              className="max-w-3xl text-lg md:text-xl lg:text-2xl text-[var(--color-text-secondary)]"
-            >
-              Engineering the energy systems behind the next generation of intelligence.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              variants={staggerItem}
-              className="flex flex-col sm:flex-row gap-4 mt-4"
-            >
-              <Link href="#demo">
-                <Button
-                  size="lg"
-                  className="gap-2 group text-black font-semibold"
+              {/* Headline */}
+              <motion.h1
+                variants={staggerItem}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+              >
+                <span
+                  className="bg-clip-text text-transparent"
                   style={{
-                    backgroundColor: NVIDIA_GREEN,
-                    borderColor: NVIDIA_GREEN
+                    backgroundImage: `linear-gradient(135deg, ${NVIDIA_GREEN} 0%, ${NVIDIA_GREEN_LIGHT} 50%, #ffffff 100%)`,
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient-shift 6s ease infinite'
                   }}
                 >
-                  See the Impact
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Link href="#hybrid">
-                <Button
-                  variant="glass"
-                  size="lg"
-                  className="gap-2"
-                  style={{
-                    borderColor: `${NVIDIA_GREEN}50`,
-                    color: NVIDIA_GREEN
-                  }}
-                >
-                  <Sparkles className="h-4 w-4" />
-                  How It Works
-                </Button>
-              </Link>
+                  Powering the Intelligence Era
+                </span>
+              </motion.h1>
+
+              {/* Subtitle */}
+              <motion.p
+                variants={staggerItem}
+                className="max-w-3xl text-lg md:text-xl lg:text-2xl text-[var(--color-text-secondary)]"
+              >
+                Engineering the energy systems behind the next generation of intelligence.
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                variants={staggerItem}
+                className="flex flex-col sm:flex-row gap-4 mt-4"
+              >
+                <Link href="#demo">
+                  <Button
+                    size="lg"
+                    className="gap-2 group text-black font-semibold"
+                    style={{
+                      backgroundColor: NVIDIA_GREEN,
+                      borderColor: NVIDIA_GREEN
+                    }}
+                  >
+                    See the Impact
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+                <Link href="#hybrid">
+                  <Button
+                    variant="glass"
+                    size="lg"
+                    className="gap-2"
+                    style={{
+                      borderColor: `${NVIDIA_GREEN}50`,
+                      color: NVIDIA_GREEN
+                    }}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    How It Works
+                  </Button>
+                </Link>
+              </motion.div>
+
             </motion.div>
-
-            {/* Hero Image */}
-            <motion.div
-              variants={staggerItem}
-              className="mt-12 w-full max-w-5xl"
-            >
-              <Image
-                src="/logo/hero.png"
-                alt="Quantum Grid Intelligence Platform"
-                width={1200}
-                height={675}
-                className="w-full h-auto rounded-2xl"
-                priority
-              />
-            </motion.div>
-
-          </motion.div>
-
+          </div>
         </div>
       </section>
 
